@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: redmine
+      POSTGRES_USER: redmine
+      POSTGRES_DB: redmine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redmine:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      REDMINE_DB_POSTGRES: db
+      REDMINE_DB_DATABASE: redmine
+      REDMINE_DB_USERNAME: redmine
+      REDMINE_DB_PASSWORD: redmine
+      SECRET_KEY_BASE: 2ef7c2c5c0e5d4d8a3f1b2e9c4d6a7b8c9e1f2d3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5
+      REDMINE_PLUGINS_MIGRATE: true
+    volumes:
+      - redmine_files:/usr/src/redmine/files
+      - ./configuration.yml:/usr/src/redmine/config/configuration.yml
+    depends_on:
+      - db
+
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
+volumes:
+  postgres_data:
+  redmine_files:

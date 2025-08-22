@@ -1,0 +1,10 @@
+# Define los servicios (contenedores) que componene la aplicación
+services:
+  # Servicio 1: Servidor Web
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      # Monta la carpeta local 'web' en la carpeta de Nginx dentro del contenedor
+      - ./web:/usr/share/nginx/html
